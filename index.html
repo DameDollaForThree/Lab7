@@ -84,6 +84,22 @@
       var endpoint = document.getElementById("endpoint").value;
       var recordForm = document.getElementById("recordForm");
       var recordIDcontainer = document.getElementById("recordIDcontainer");
+      var author;
+      const author_input = document.getElementById("author");
+      author_input.addEventListener('change', (e) => {
+        author = e.target.value;
+      });
+      var title;
+      const title_input = document.getElementById("title");
+      title_input.addEventListener('change', (e) => {
+        title = e.target.value;
+      });
+      var id;
+      const id_input = document.getElementById("recordID");
+      id_input.addEventListener('change', (e) => {
+        id = e.target.value;
+      });
+
 
       function handleErrors(response) {
         if (!response.ok) {
@@ -92,13 +108,20 @@
         return response;
       }
 
+      function clearInput() {
+        recordForm.style.display = "none";
+        recordIDcontainer.style.display = "none";
+        document.getElementById("author").value = null;
+        document.getElementById("title").value = null;
+        document.getElementById("recordID").value = null;
+      }
+
       // This function should fetch all of the data from the given endpoint.
       // From the 4 CRUD actions, this is the READ action, and uses the GET http method.
       // The main difference from fetchOne() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchAll() {
-        recordForm.style.display = "none";
-        recordIDcontainer.style.display = "none";
+        clearInput();
 
         fetch(endpoint, {
           method: 'GET',
@@ -123,8 +146,7 @@
       // The main difference from fetchAll() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchOne() {
-        recordForm.style.display = "none";
-        recordIDcontainer.style.display = "none";
+        clearInput();
 
         var ID = prompt("Enter record id");
         var new_endpoint = endpoint + '/' + ID;
@@ -153,12 +175,12 @@
       // The main difference from updateRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
       function createRecord() {
+        console.log("start of createRecord");
+        clearInput();
         recordForm.style.display = "block";
         recordIDcontainer.style.display = "none";
-        var author = document.getElementById('author').value;
-        var title = document.getElementById('title').value;
-
-        if (author != '' && title != '') {
+        
+        if (author != null && title != null) {
           const data = { author: author, title: title };
 
           fetch(endpoint, {
@@ -179,6 +201,7 @@
             output.innerHTML = error;
           });
         }
+        console.log("end of createRecord");
         
       }
 
@@ -187,13 +210,11 @@
       // The main difference from createRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
       function updateRecord() {
+        clearInput();
         recordForm.style.display = "block";
         recordIDcontainer.style.display = "block";
-        var author = document.getElementById('author').value;
-        var title = document.getElementById('title').value;
-        var id = document.getElementById('recordID').value;
 
-        if (id != '') {
+        if (id != null) {
           const data = { author: author, title: title };
           var new_endpoint = endpoint + '/' + id;
 
@@ -224,8 +245,7 @@
       // request; check the writeup to view the URL pattern for get one and delete. THERE IS NO 
       // delete all, only delete one.
       function deleteRecord() {
-        recordForm.style.display = "none";
-        recordIDcontainer.style.display = "none";
+        clearInput();
 
         var ID = prompt("Enter record id");
         var new_endpoint = endpoint + '/' + ID;
